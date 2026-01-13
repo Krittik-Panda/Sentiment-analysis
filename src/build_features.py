@@ -1,5 +1,5 @@
 # ------------------------------------
-# BUILD FEATURES MATRIX AND LABELS
+# BUILD TF-IDF FEATURES AND LABEL FILES
 # ------------------------------------
 # Covers Assignment:
 # 1.4 List unique words throughout document
@@ -15,33 +15,37 @@ from scipy import sparse
 import pickle
 
 def build_features():
-    print("🔹 Loading stopwords...")
+    print("🔹 Reading split CSVs ...")
+    train_df = pd.read_csv("data/train_split.csv")
+    test_df = pd.read_csv("data/test.csv")
+
     stopwords = load_stopwords("stop-words-list.txt")
 
-    print("🔹 Reading dataset...")
-    df = pd.read_csv("data/train.csv", encoding="latin1")
-    print(f"   Loaded {len(df)} tweets.")
+    print("🔹 Cleaning training tweets...")
+    train_clean = train_df["text"].apply(lambda t: clean_text(str(t), stopwords))
 
-    print("🔹 Preprocessing tweets (cleaning + removing stopwords)...")
-    df["clean"] = df["text"].apply(lambda t: clean_text(str(t), stopwords))
-    print("   ✔ Text cleaning done!")
+    print("🔹 Cleaning testing tweets...")
+    test_clean = test_df["text"].apply(lambda t: clean_text(str(t), stopwords))
 
-    print("🔹 Building TF-IDF vocabulary (max 10,000 words)...")
+    print("🔹 Creating TF-IDF with max 10,000 features...")
     vectorizer = TfidfVectorizer(max_features=10000)
-    X = vectorizer.fit_transform(df["clean"])
-    print("   ✔ TF-IDF matrix created!")
+    X_train = vectorizer.fit_transform(train_clean)
+    X_test = vectorizer.transform(test_clean)
 
-    print("🔹 Saving X (sparse matrix) and labels Y...")
-    sparse.save_npz("X_train_sparse.npz", X)
-    df["sentiment"].to_csv("y_train.csv", index=False)
+    print("🔹 Saving sparse TF-IDF matrices...")
+    sparse.save_npz("X_train_sparse.npz", X_train)
+    sparse.save_npz("X_test_sparse.npz", X_test)
+
+    print("🔹 Saving label files...")
+    train_df["sentiment"].to_csv("y_train.csv", index=False)
+    test_df["sentiment"].to_csv("y_test.csv", index=False)
 
     print("🔹 Saving vectorizer...")
     pickle.dump(vectorizer, open("vectorizer.pkl", "wb"))
 
-    print("\n\n\n DONE! All features and labels created!")
-    print("   ➤ X_train_sparse.npz (features)")
-    print("   ➤ y_train.csv (labels)")
-    print("   ➤ vectorizer.pkl (vocab builder)\n")
+    print("\n🎉 DONE BUILDING FEATURES!")
+    print(f"✔ X_train_sparse.npz shape: {X_train.shape}")
+    print(f"✔ X_test_sparse.npz shape:  {X_test.shape}")
 
 if __name__ == "__main__":
     build_features()

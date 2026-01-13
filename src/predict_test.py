@@ -1,39 +1,32 @@
 # -----------------------------------------------
-# COMPARE PREDICTIONS WITH TRUE TEST LABELS
+# PREDICT & COMPARE WITH TRUE TEST LABELS
 # -----------------------------------------------
 
 import pandas as pd
 from scipy import sparse
 import pickle
-from preprocess import clean_text, load_stopwords
 
 def predict():
-    print("🔹 Loading model and vectorizer...")
+    print("🔹 Loading model & vectorizer...")
     model = pickle.load(open("model.pkl", "rb"))
     vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
-    stopwords = load_stopwords("stop-words-list.txt")
 
-    print("🔹 Loading test data...")
-    df = pd.read_csv("data/test.csv", encoding="latin1")
+    print("🔹 Loading test set...")
+    X_test = sparse.load_npz("X_test_sparse.npz")
+    y_test = pd.read_csv("y_test.csv")["sentiment"]
 
-    # Clean using SAME preprocessing
-    df["clean"] = df["text"].apply(lambda t: clean_text(str(t), stopwords))
+    test_df = pd.read_csv("data/test.csv")
 
-    print("🔹 Converting test tweets to TF-IDF features...")
-    X_test = vectorizer.transform(df["clean"])
-    y_test = df["sentiment"].values
-
-    print("\n--- SAMPLE COMPARISON (Tweet | Prediction | True Label) ---")
+    print("\n--- SAMPLE PREDICTIONS ---")
     preds = model.predict(X_test)
 
-    for text, pred, true in zip(df["text"][:10], preds[:10], y_test[:10]):
-        print(f"\nTWEET: {text}")
+    for text, pred, true in zip(test_df["text"][:10], preds[:10], y_test[:10]):
+        print(f"\n{text}")
         print(f"PREDICTED: {pred}")
-        print(f"TRUE LABEL: {true}")
+        print(f"TRUE:      {true}")
 
-    # Calculate accuracy
     accuracy = (preds == y_test).mean()
-    print("\n🎯 TEST ACCURACY:", accuracy)
+    print(f"\n🎯 TEST ACCURACY: {accuracy:.4f}")
 
 if __name__ == "__main__":
     predict()

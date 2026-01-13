@@ -1,5 +1,5 @@
 # -------------------------
-# TRAIN ML MODEL
+# TRAIN LOGISTIC REGRESSION
 # -------------------------
 # Covers Assignment:
 # 5 Feed X and Y into ML model
@@ -11,18 +11,16 @@ from scipy import sparse
 import pickle
 
 def train():
-    # Load features + labels
-    X = sparse.load_npz("X_train_sparse.npz")
-    y = pd.read_csv("y_train.csv")["sentiment"].values
+    print("🔹 Loading training features...")
+    X_train = sparse.load_npz("X_train_sparse.npz")
+    y_train = pd.read_csv("y_train.csv")["sentiment"]
 
-    # Train Logistic Regression (Step 6)
-    model = LogisticRegression(max_iter=300)
-    model.fit(X, y)
+    print("🔹 Training Logistic Regression...")
+    model = LogisticRegression(max_iter=300, n_jobs=-1)
+    model.fit(X_train, y_train)
 
-    # Save trained model
     pickle.dump(model, open("model.pkl", "wb"))
-
-    print("Model trained and saved!")
+    print("\n🎉 MODEL TRAINED AND SAVED!")
 
 if __name__ == "__main__":
     train()
