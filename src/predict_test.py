@@ -1,5 +1,5 @@
 # -----------------------------------------------
-# PRINT TWEET + PREDICTED SENTIMENT + ACCURACY
+# COMPARE PREDICTIONS WITH TRUE TEST LABELS
 # -----------------------------------------------
 
 import pandas as pd
@@ -8,32 +8,32 @@ import pickle
 from preprocess import clean_text, load_stopwords
 
 def predict():
-    # Load model + vectorizer
+    print("🔹 Loading model and vectorizer...")
     model = pickle.load(open("model.pkl", "rb"))
     vectorizer = pickle.load(open("vectorizer.pkl", "rb"))
     stopwords = load_stopwords("stop-words-list.txt")
 
-    # Load original tweets & labels
-    df = pd.read_csv("data/train.csv", encoding="latin1")
+    print("🔹 Loading test data...")
+    df = pd.read_csv("data/test.csv", encoding="latin1")
 
-    # Clean tweets again using SAME logic
+    # Clean using SAME preprocessing
     df["clean"] = df["text"].apply(lambda t: clean_text(str(t), stopwords))
 
-    # Transform using saved vectorizer
-    X = vectorizer.transform(df["clean"])
-    y = df["sentiment"].values
+    print("🔹 Converting test tweets to TF-IDF features...")
+    X_test = vectorizer.transform(df["clean"])
+    y_test = df["sentiment"].values
 
-    # Predict
-    preds = model.predict(X)
+    print("\n--- SAMPLE COMPARISON (Tweet | Prediction | True Label) ---")
+    preds = model.predict(X_test)
 
-    # Print some tweet + prediction pairs
-    print("\n--- SAMPLE PREDICTIONS ---")
-    for text, pred in zip(df["text"][:10], preds[:10]):
-        print(f"{text}  --->  {pred}")
+    for text, pred, true in zip(df["text"][:10], preds[:10], y_test[:10]):
+        print(f"\nTWEET: {text}")
+        print(f"PREDICTED: {pred}")
+        print(f"TRUE LABEL: {true}")
 
-    # Accuracy
-    accuracy = (preds == y).mean()
-    print("\nAccuracy:", accuracy)
+    # Calculate accuracy
+    accuracy = (preds == y_test).mean()
+    print("\n🎯 TEST ACCURACY:", accuracy)
 
 if __name__ == "__main__":
     predict()
