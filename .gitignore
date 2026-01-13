@@ -1,2 +1,9 @@
 .venv/
 data/
+model.pkl
+X_train_sparse.npz
+X_test_sparse.npz
+y_train.csv
+y_test.csv
+vectorizer.pkl
+*.npz
