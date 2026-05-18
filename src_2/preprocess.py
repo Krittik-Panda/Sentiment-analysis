@@ -30,8 +30,12 @@ def clean_text(text, stopwords):
     return " ".join(tokens)                        # 1.3 return
 
 # ── Label mapping for the 3-class dataset ─────────────────────────────────
+# LABEL_MAP = {
+#     -1: "negative",
+#      0: "neutral",
+#      1: "positive"
+# }
 LABEL_MAP = {
-    -1: "negative",
-     0: "neutral",
-     1: "positive"
-}
+      0: "negative",
+      4: "positive"
+ }

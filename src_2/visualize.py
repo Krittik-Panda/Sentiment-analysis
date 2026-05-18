@@ -25,8 +25,8 @@ warnings.filterwarnings("ignore")
 
 sns.set_theme(style="whitegrid", palette="muted", font_scale=1.1)
 
-PALETTE   = {"negative": "#E74C3C", "neutral": "#3498DB", "positive": "#2ECC71"}
-CLASSES   = ["negative", "neutral", "positive"]
+PALETTE   = {"negative": "#E74C3C", "positive": "#2ECC71"}
+CLASSES   = ["negative", "positive"]
 PLOTS_DIR = "plots"
 os.makedirs(PLOTS_DIR, exist_ok=True)
 
@@ -34,7 +34,7 @@ os.makedirs(PLOTS_DIR, exist_ok=True)
 def savefig(name: str):
     path = os.path.join(PLOTS_DIR, name)
     plt.savefig(path, dpi=150, bbox_inches="tight")
-    print(f"   ✔ Saved → {path}")
+    print(f"   Saved → {path}")
     plt.close()
 
 
@@ -51,7 +51,7 @@ def load_data():
 
 # ── Plot 1: Class Distribution Bar ───────────────────────────────────────────
 def plot_class_bar(df):
-    print("\n📊 Plot 1 : Class Distribution Bar ...")
+    print("\n Plot 1 : Class Distribution Bar ...")
     counts = df["sentiment"].value_counts().reindex(CLASSES)
     total  = counts.sum()
 
@@ -77,7 +77,7 @@ def plot_class_bar(df):
 
 # ── Plot 2: Class Distribution Pie ───────────────────────────────────────────
 def plot_class_pie(df):
-    print("📊 Plot 2 : Class Distribution Pie ...")
+    print(" Plot 2 : Class Distribution Pie ...")
     counts = df["sentiment"].value_counts().reindex(CLASSES)
 
     fig, ax = plt.subplots(figsize=(6, 6))
@@ -87,7 +87,7 @@ def plot_class_pie(df):
         colors=[PALETTE[c] for c in CLASSES],
         autopct="%1.1f%%",
         startangle=140,
-        explode=[0.04] * 3,
+        explode=[0.04] * 2,
         wedgeprops=dict(edgecolor="white", linewidth=1.5)
     )
     for at in autotexts:
@@ -99,7 +99,7 @@ def plot_class_pie(df):
 
 # ── Plot 3: Tweet Length Histogram ───────────────────────────────────────────
 def plot_length_histogram(df):
-    print("📊 Plot 3 : Tweet Length Histogram ...")
+    print(" Plot 3 : Tweet Length Histogram ...")
     fig, axes = plt.subplots(1, 3, figsize=(15, 4), sharey=True)
     for ax, cls in zip(axes, CLASSES):
         data = df[df["sentiment"] == cls]["tweet_length"]
@@ -118,7 +118,7 @@ def plot_length_histogram(df):
 
 # ── Plot 4: Tweet Length Box Plot ────────────────────────────────────────────
 def plot_length_boxplot(df):
-    print("📊 Plot 4 : Tweet Length Box Plot ...")
+    print(" Plot 4 : Tweet Length Box Plot ...")
     fig, ax = plt.subplots(figsize=(7, 5))
     sns.boxplot(data=df, x="sentiment", y="tweet_length", order=CLASSES,
                 palette=PALETTE, width=0.45, linewidth=1.3,
@@ -133,7 +133,7 @@ def plot_length_boxplot(df):
 
 # ── Plot 5: Top-20 TF-IDF Terms per Class ────────────────────────────────────
 def plot_top_tfidf_per_class(df, stopwords):
-    print("📊 Plot 5 : Top-20 TF-IDF Terms per Class ...")
+    print(" Plot 5 : Top-20 TF-IDF Terms per Class ...")
     fig, axes = plt.subplots(1, 3, figsize=(18, 7))
 
     for ax, cls in zip(axes, CLASSES):
@@ -165,7 +165,7 @@ def plot_top_tfidf_per_class(df, stopwords):
 
 # ── Plot 6: TF-IDF Correlation Heatmap ───────────────────────────────────────
 def plot_tfidf_heatmap(df, stopwords):
-    print("📊 Plot 6 : TF-IDF Correlation Heatmap (top-50 terms) ...")
+    print(" Plot 6 : TF-IDF Correlation Heatmap (top-50 terms) ...")
     corpus  = df["text"].apply(lambda t: clean_text(t, stopwords))
     vec     = TfidfVectorizer(max_features=50)
     tmat    = vec.fit_transform(corpus).toarray()

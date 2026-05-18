@@ -16,32 +16,41 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 from preprocess import clean_text, load_stopwords
 from scipy import sparse
 import pickle
+import time
 
 FEATURES_DIR = "features"
 os.makedirs(FEATURES_DIR, exist_ok=True)
 
 def build_features():
-    print("🔹 Reading split CSVs ...")
+    print(" Reading split CSVs ...")
+    time.sleep(2.55)        # wait 2.55 second ....
+
     train_df = pd.read_csv("data/train_split.csv")
     test_df  = pd.read_csv("data/test.csv")
 
     stopwords = load_stopwords("stop-words-list.txt")
 
-    print("🔹 Cleaning training tweets ...")
-    train_clean = train_df["text"].apply(lambda t: clean_text(str(t), stopwords))
+    print(" Cleaning training tweets ...")
+    train_clean = train_df["text"].apply(lambda t: clean_text(str(t), stopwords)) #.apply() applies a function to every value in a Pandas Series or DataFrame. take every row value from "text" column and pass it into clean_tweet()
 
-    print("🔹 Cleaning test tweets ...")
+    print(" Cleaning test tweets ...")
     test_clean  = test_df["text"].apply(lambda t: clean_text(str(t), stopwords))
 
     # 1.4 Unique vocabulary
-    all_tokens = set(tok for doc in train_clean for tok in doc.split())
-    print(f"\n📌 Unique words in training corpus : {len(all_tokens):,}")
+    all_tokens = set()
+
+    for doc in train_clean:
+        words = doc.split()
+
+        for tok in words:
+            all_tokens.add(tok)
+    print(f"\n Unique words in training corpus : {len(all_tokens)}")
 
     # 1.5 TF-IDF vectorisation
-    print("\n🔹 Creating TF-IDF vectoriser (max 10,000 features, unigrams+bigrams) ...")
+    print("\n  Creating TF-IDF vectoriser (max 10,000 features, unigrams+bigrams) ...")
     vectorizer = TfidfVectorizer(
-        max_features=10000,
-        ngram_range=(1, 2),   # unigrams + bigrams
+        max_features=15000,
+        ngram_range=(1, 2),   # unigrams(one words : good , bad, creppy, etc.) + bigrams(two words: not good, very bad, etc.)
         sublinear_tf=True     # log(1+tf) — normalises long tweets
     )
 
@@ -49,7 +58,7 @@ def build_features():
     X_test  = vectorizer.transform(test_clean)
 
     # ── Save all artefacts to  features/  ───────────────────────────────────
-    print(f"\n🔹 Saving artefacts to  {FEATURES_DIR}/  ...")
+    print(f"\n Saving artefacts to  {FEATURES_DIR}/  ...")
 
     sparse.save_npz(os.path.join(FEATURES_DIR, "X_train_sparse.npz"), X_train)
     sparse.save_npz(os.path.join(FEATURES_DIR, "X_test_sparse.npz"),  X_test)
@@ -59,13 +68,13 @@ def build_features():
 
     pickle.dump(vectorizer, open(os.path.join(FEATURES_DIR, "vectorizer.pkl"), "wb"))
 
-    print("\n✅ DONE BUILDING FEATURES!")
-    print(f"   ✔ X_train : {X_train.shape}")
-    print(f"   ✔ X_test  : {X_test.shape}")
-    print(f"   ✔ Vocab   : {len(vectorizer.vocabulary_):,} terms")
-    print(f"\n📊 Training label distribution:")
+    print("\n DONE BUILDING FEATURES!")
+    print(f"    X_train : {X_train.shape}")
+    print(f"    X_test  : {X_test.shape}")
+    print(f"    Vocab   : {len(vectorizer.vocabulary_):,} terms")
+    print(f"\n Training label distribution:")
     print(train_df["sentiment"].value_counts().to_string())
-    print(f"\n📊 Test label distribution:")
+    print(f"\n Test label distribution:")
     print(test_df["sentiment"].value_counts().to_string())
 
 if __name__ == "__main__":

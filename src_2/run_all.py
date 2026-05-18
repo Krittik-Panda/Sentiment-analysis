@@ -78,7 +78,7 @@ def run_stage(script: str, label: str):
     ret = subprocess.run([sys.executable, path], check=False)
     elapsed = time.time() - t0
     if ret.returncode != 0:
-        print(f"\n❌  Stage FAILED: {script}  (exit code {ret.returncode})")
+        print(f"\n  Stage FAILED: {script}  (exit code {ret.returncode})")
         sys.exit(ret.returncode)
     print(f"\n   ⏱  Done in {elapsed:.1f}s")
 
@@ -86,7 +86,7 @@ def run_stage(script: str, label: str):
 def main():
     total_start = time.time()
     print(SEP)
-    print("  🚀  SENTIMENT ANALYSIS PIPELINE  —  3-CLASS")
+    print("    SENTIMENT ANALYSIS PIPELINE  —  3-CLASS")
     print(SEP)
 
     for script, label in STAGES:
@@ -94,7 +94,7 @@ def main():
 
     total = time.time() - total_start
     print(f"\n{SEP}")
-    print(f"  ✅  ALL STAGES COMPLETE  |  Total time: {total:.1f}s")
+    print(f"    ALL STAGES COMPLETE  |  Total time: {total:.1f}s")
     print(SEP)
     print("\nOutputs:")
     print("  data/train_split.csv  &  data/test.csv")
