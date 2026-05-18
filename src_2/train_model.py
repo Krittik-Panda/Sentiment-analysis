@@ -1,13 +1,4 @@
-# -------------------------------------------
-# TRAIN LOGISTIC REGRESSION  (3-CLASS / SOFTMAX)
-# -------------------------------------------
-# Covers Assignment:
-# 5  Feed X and Y into ML model
-# 6  Train the model
-#
-# FIX: `multi_class` was removed in scikit-learn 1.5+.
-#      solver='lbfgs' on a multi-class problem automatically
-#      uses softmax (multinomial cross-entropy) — no extra flag needed.
+
 
 import os
 import pandas as pd
@@ -31,6 +22,7 @@ def train():
     model = LogisticRegression(
         solver="lbfgs",    
         max_iter=5000,
+        class_weight= 'balanced',
         C=1.0,             # L2 regularisation
         n_jobs=-1,
         random_state=42

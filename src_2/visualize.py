@@ -1,7 +1,4 @@
-# ============================================================
-# VISUALIZE.PY  —  Dataset & Model Visualisations
-# ============================================================
-# All plots saved to:  plots/
+
 #
 #  01_class_distribution_bar.png
 #  02_class_distribution_pie.png
