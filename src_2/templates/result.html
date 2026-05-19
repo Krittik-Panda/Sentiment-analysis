@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Result</title>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #0f0f14;
+      font-family: sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 2rem;
+    }
+
+    .card {
+      background: #1a1a24;
+      border: 1px solid #2e2e42;
+      border-radius: 14px;
+      padding: 2.5rem;
+      width: 100%;
+      max-width: 460px;
+      text-align: center;
+    }
+
+    .label {
+      display: inline-block;
+      font-size: 2rem;
+      font-weight: 700;
+      padding: 0.5rem 1.8rem;
+      border-radius: 50px;
+      margin-bottom: 2rem;
+    }
+
+    .positive { color: #29e10dcf; background: rgba(74,222,128,0.12); }
+    .negative { color: #eb1212; background: rgba(248,113,113,0.12); }
+    .neutral  { color: #00e3d4; background: rgba(96,165,250,0.12);  }
+
+    a {
+      display: inline-block;
+      padding: 0.75rem 2rem;
+      background: #7c6af7;
+      border-radius: 8px;
+      color: #fff;
+      font-weight: 600;
+      font-size: 0.95rem;
+      text-decoration: none;
+      transition: background 0.2s;
+    }
+    a:hover { background: #6a58e0; }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <p class="label {{ label | lower }}">{{ label }}</p>
+    <a href="/">← Try another</a>
+  </div>
+</body>
+</html>

@@ -1,3 +1,13 @@
 numpy
 pandas
 scikit-learn
+flask
+jupyter
+ipykernel
+numpy
+pandas
+matplotlib
+scikit-learn
+flask-sqlalchemy
+flask-cors
+requests

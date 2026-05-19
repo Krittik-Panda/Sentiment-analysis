@@ -47,9 +47,9 @@ def build_features():
     print(f"\n Unique words in training corpus : {len(all_tokens)}")
 
     # 1.5 TF-IDF vectorisation
-    print("\n  Creating TF-IDF vectoriser (max 10,000 features, unigrams+bigrams) ...")
+    print("\n  Creating TF-IDF vectoriser (max 25,000 features, unigrams+bigrams) ...")
     vectorizer = TfidfVectorizer(
-        max_features=15000,
+        max_features=25000,
         ngram_range=(1, 2),   # unigrams(one words : good , bad, creppy, etc.) + bigrams(two words: not good, very bad, etc.)
         sublinear_tf=True     # log(1+tf) — normalises long tweets
     )

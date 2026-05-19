@@ -17,12 +17,11 @@ def train():
     print(f"   X_train shape : {X_train.shape}")
     print(f"   Classes       : {sorted(y_train.unique())}")
 
-    # lbfgs + 3 classes → softmax (multinomial) loss, sklearn 1.5+ compatible
-    print("\n🔹 Training Logistic Regression (Softmax via lbfgs) ...")
+    
+    print("\n Training Logistic Regression (Softmax via lbfgs) ...")
     model = LogisticRegression(
         solver="lbfgs",    
-        max_iter=5000,
-        class_weight= 'balanced',
+        max_iter=7000,
         C=1.0,             # L2 regularisation
         n_jobs=-1,
         random_state=42
