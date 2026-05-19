@@ -10,7 +10,7 @@ stopwords = load_stopwords("stop-words-list.txt")
 
 def predict():
         input_text = str(input("Enter a text : "))
-        clean_input_text = clean_text(input_text, stopwords)
+        clean_input_text = clean_text(input_text, stopwords) # clean 
   
 
         X = vectorizer.transform([clean_input_text]) # must pass a list
